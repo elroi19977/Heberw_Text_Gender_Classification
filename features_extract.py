@@ -2,11 +2,9 @@ import pandas as pd
 import string
 import re
 
-from transformers import AutoTokenizer, BertTokenizerFast
+from transformers import BertTokenizerFast
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from collections import defaultdict
-from gensim.models import TfidfModel
-from gensim.corpora import Dictionary
 
 from stop_words import STOP_WORDS
 # PUNKT does not contain # (for bert) and ` (for words like `ה)
@@ -52,16 +50,9 @@ def create_tokens_columns(df, sw = True):
         lambda x: clean_tokens(x, stop_words=sw)
     )
 
-    df["A_tokens_no_sw"] = df.apply(lambda r: my_own_tokenizer(r['Answer']), axis=1).apply(
-        lambda x: clean_tokens(x, stop_words=sw)
-    )
-
 def create_bert_tokens_columns(df, sw = True):
-    df["Q_bert_tokens_no_sw"] = df.apply(lambda r: bert_tokenizer(r['Question']), axis=1).apply(
-        lambda x: clean_tokens(x, stop_words=sw)
-    )
-
-    df["A_bert_tokens_no_sw"] = df.apply(lambda r: bert_tokenizer(r['Answer']), axis=1).apply(
+    col_name = "Q_bert_tokens{}".format("_no_sw" if sw else "")
+    df[col_name] = df.apply(lambda r: bert_tokenizer(r['Question']), axis=1).apply(
         lambda x: clean_tokens(x, stop_words=sw)
     )
 

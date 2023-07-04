@@ -1,14 +1,32 @@
 import pandas as pd
 import numpy as np
 
-import matplotlib.pyplot as plt
-from sklearn import preprocessing, svm
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+
+def get_x(df):
+    return df.drop(["Question", "Answer", "Gender"], axis=1)
+
+def get_y(df):
+    return df["Gender"]
+
+def df_train_test_split(df):
+    X = get_x(df)
+    Y = get_y(df)
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, 
+        Y, 
+        test_size = 0.25, 
+        stratify=Y, 
+        random_state=42
+    )
+
+    return X_train, X_test, y_train, y_test
 
 def model_metrics(y_test, y_pred):
     print("Accuracy:", accuracy_score(y_test, y_pred))
