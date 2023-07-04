@@ -3,3 +3,5 @@
 /helper
 /testing.ipynb
 /__pycache__
+/.gitignore
+/.*
