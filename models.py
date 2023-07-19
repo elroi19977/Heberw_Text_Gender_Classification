@@ -6,10 +6,10 @@ from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, accuracy_score, make_scorer
 
 def get_x(df):
-    return df.drop(["Question", "Answer", "Gender"], axis=1)
+    return df.drop(["Question", "Answer", "Gender", "AnswerGender"], axis=1)
 
 def get_y(df):
     return df["Gender"]
@@ -104,7 +104,8 @@ def RandForest(X_train, X_test, y_train, y_test, n_estimators = 1000, max_depth 
 def RFGSCV(X_train, X_test, y_train, y_test, param_grid):
     rf = RandomForestClassifier(max_features='sqrt', random_state=42, n_jobs=-1)  
 
-    CV_rf = GridSearchCV(estimator=rf, param_grid=param_grid)  
+    scoring = {"AUC": "roc_auc", "Accuracy": make_scorer(accuracy_score)}
+    CV_rf = GridSearchCV(estimator=rf, param_grid=param_grid, scoring=scoring, refit="AUC")  
     CV_rf.fit(X_train, y_train)
 
     print(CV_rf.best_params_)
