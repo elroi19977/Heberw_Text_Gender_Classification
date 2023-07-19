@@ -56,6 +56,17 @@ def create_bert_tokens_columns(df, sw = True):
         lambda x: clean_tokens(x, stop_words=sw)
     )
 
+def create_tokens_columns_answer(df, sw = True):
+    df["A_tokens_no_sw"] = df.apply(lambda r: my_own_tokenizer(r['Answer']), axis=1).apply(
+        lambda x: clean_tokens(x, stop_words=sw)
+    )
+
+def create_bert_tokens_columns_answer(df, sw = True):
+    col_name = "A_bert_tokens{}".format("_no_sw" if sw else "")
+    df[col_name] = df.apply(lambda r: bert_tokenizer(r['Answer']), axis=1).apply(
+        lambda x: clean_tokens(x, stop_words=sw)
+    )
+
 
 ##### Vectorization Functions #####
 def create_frequency_dict(texts):
@@ -73,7 +84,7 @@ def filter_tokens_by_freq(texts, min_freq = 10):
     ]
     return docs
 
-def create_filter_vocab(tokens_corpus, min_freq):
+def create_filter_vocab_by_freq(tokens_corpus, min_freq):
     filtered_tokens_corpus = filter_tokens_by_freq(tokens_corpus, min_freq)
     filtered_vocab = {item for sublist in filtered_tokens_corpus for item in sublist}
     return filtered_vocab
