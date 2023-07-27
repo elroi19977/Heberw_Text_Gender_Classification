@@ -9,7 +9,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, accuracy_score, make_scorer
 
 def get_x(df):
-    return df.drop(["Question", "Answer", "Gender", "AnswerGender"], axis=1)
+    return df.drop(["Question", "Answer", "Gender"], axis=1)
 
 def get_y(df):
     return df["Gender"]
